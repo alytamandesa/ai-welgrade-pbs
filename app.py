@@ -46,15 +46,6 @@ st.markdown(
         padding-bottom: 2rem;
     }
 
-    .header-card {
-        background: linear-gradient(135deg, #ffffff 0%, #eef4ff 100%);
-        border: 1px solid #dbe7ff;
-        border-radius: 18px;
-        padding: 24px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-    }
-
     .app-title {
         font-size: 2.2rem;
         font-weight: 800;
@@ -414,7 +405,14 @@ def render_header():
             logo_path = path
             break
 
-    st.markdown('<div class="header-card">', unsafe_allow_html=True)
+    hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            .stDeployButton {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
     col_logo, col_title = st.columns([1, 6])
 
