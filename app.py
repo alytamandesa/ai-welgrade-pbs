@@ -414,7 +414,7 @@ def render_header():
             """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-    col_logo, col_title = st.columns([1, 6])
+    col_logo, col_title = st.columns([1, 6], vertical_alignment="center")
 
     with col_logo:
         if logo_path:
