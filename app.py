@@ -441,17 +441,21 @@ def render_header():
 
 st.sidebar.title("Navigation")
 
-page = st.sidebar.radio(
-    "Go to",
-    [
-        "Home",
-        "Welding Assessment",
-        "Result & Rubric Score",
-        "PDF Report",
-        "User Evaluation / CQI Feedback",
-        "About & Limitation"
-    ]
-)
+from streamlit_option_menu import option_menu
+
+with st.sidebar:
+    page = option_menu(
+        menu_title=None,  # Hide menu title
+        options=[
+            "Home",
+            "Welding Assessment",
+            "Result & Rubric Score",
+            "PDF Report",
+            "User Evaluation / CQI Feedback",
+            "About & Limitation"
+        ],
+        default_index=0,
+    )
 
 st.sidebar.markdown("---")
 st.sidebar.caption("AI Welgrade by PBS | Lite Mode")
