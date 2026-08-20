@@ -203,24 +203,6 @@ def predict_image(image):
     return predicted_class, confidence, probabilities
 
 
-def make_after_image(image, predicted_class, confidence):
-    image = image.convert("RGB")
-    color = display_color(predicted_class)
-
-    border = 18
-    top_bar = 70
-    w, h = image.size
-
-    canvas = Image.new("RGB", (w + border * 2, h + border * 2 + top_bar), color)
-    draw = ImageDraw.Draw(canvas)
-
-    label_text = f"AI Classification: {display_label(predicted_class)} | Confidence: {confidence:.2f}%"
-    draw.text((20, 24), label_text, fill="white")
-
-    canvas.paste(image, (border, top_bar + border))
-    return canvas
-
-
 def rubric_scores(predicted_class, confidence, project_type):
     if predicted_class == "good_weld":
         base = {
@@ -541,7 +523,6 @@ elif page == "Welding Assessment":
             predicted_class, confidence, probabilities = predict_image(image)
             scores, total_score, max_mark, percentage = rubric_scores(predicted_class, confidence, project_type)
             status, status_message = confidence_status(confidence)
-            after_image = make_after_image(image, predicted_class, confidence)
 
             result = {
                 "student_name": student_name,
@@ -549,7 +530,6 @@ elif page == "Welding Assessment":
                 "welding_process": welding_process,
                 "project_type": project_type,
                 "image": image,
-                "after_image": after_image,
                 "predicted_class": predicted_class,
                 "confidence": confidence,
                 "probabilities": probabilities,
@@ -604,16 +584,10 @@ elif page == "Result & Rubric Score":
     if result is None:
         st.warning("No assessment result available. Please run analysis on the Welding Assessment page first.")
     else:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.subheader("Before Analysis")
+        st.subheader("Weld Image")
+        cols = st.columns([2,1])
+        with cols[0]:
             st.image(result["image"], use_container_width=True)
-
-        with col2:
-            st.subheader("After Analysis")
-            st.image(result["after_image"], use_container_width=True)
-            st.caption("Lite Mode visual overlay only. This does not mark confirmed defect locations.")
 
         predicted_class = result["predicted_class"]
 
