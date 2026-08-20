@@ -465,38 +465,62 @@ if page == "Home":
 # =========================
 
 elif page == "Welding Assessment":
-    st.header("Welding Assessment")
+    if "file_key_counter" not in st.session_state:
+        st.session_state["file_key_counter"] = 0
+
+    col_head, col_reset = st.columns([3, 1], vertical_alignment="bottom")
+    with col_head:
+        st.header("Welding Assessment")
+    with col_reset:
+        if st.button("Reset Form", type="primary"):
+            st.session_state.pop("assessment_result", None)
+
+            st.session_state["student_name"] = ""
+            st.session_state["company"] = ""
+            st.session_state["welding_process"] = ""
+            st.session_state["project_type"] = "Project 1 - Straight Bead / Start-Stop"
+            st.session_state["input_method"] = "Upload Image"
+
+            st.session_state["file_key_counter"] += 1
+
+            st.rerun()
 
     col_a, col_b = st.columns(2)
 
     with col_a:
-        student_name = st.text_input("Student / User Name")
-        company = st.text_input("Company / Class")
+        student_name = st.text_input("Student / User Name", key="student_name")
+        company = st.text_input("Company / Class", key="company")
 
     with col_b:
-        welding_process = st.text_input("Welding Process")
+        welding_process = st.text_input("Welding Process", key="welding_process")
         project_type = st.radio(
             "Select Welding Project Type",
             [
                 "Project 1 - Straight Bead / Start-Stop",
                 "Project 2 - Butt Joint"
-            ]
+            ],
+            key="project_type"
         )
 
     input_method = st.radio(
         "Choose Image Input Method",
         ["Upload Image", "Capture Image"],
-        horizontal=True
+        horizontal=True,
+        key="input_method"
     )
 
     if input_method == "Upload Image":
         image_file = st.file_uploader(
             "Upload welding image",
             type=["jpg", "jpeg", "png"],
-            help="Upload a clear welding image with proper lighting and visible weld bead."
+            help="Upload a clear welding image with proper lighting and visible weld bead.",
+            key=f"uploaded_file_{st.session_state['file_key_counter']}"
         )
     else:
-        image_file = st.camera_input("Capture welding image")
+        image_file = st.camera_input(
+            "Capture welding image",
+            key=f"camera_file_{st.session_state['file_key_counter']}"
+        )
 
     if st.button("Run AI Analysis", type="primary"):
         if image_file is None:
@@ -530,25 +554,29 @@ elif page == "Welding Assessment":
             }
 
             st.session_state["assessment_result"] = result
+            st.rerun()
 
-            st.success("AI analysis completed. Go to Result & Rubric Score page to view the full result.")
+    if "assessment_result" in st.session_state and st.session_state["assessment_result"] is not None:
+        res = st.session_state["assessment_result"]
 
-            st.subheader("Quick Result")
-            st.write(f"**Predicted Class:** {display_icon(predicted_class)} {display_label(predicted_class)}")
-            st.write(f"**Confidence:** {confidence:.2f}%")
-            st.write(f"**Preliminary Score:** {total_score} / {max_mark}")
-            st.write("**Percentage:**", f"{percentage:.2f}%")
+        st.success("AI analysis completed. Go to Result & Rubric Score page to view the full result.")
 
-            st.write("Generate and download the AI-assisted visual welding assessment report.")
+        st.subheader("Quick Result")
+        st.write(f"**Predicted Class:** {display_icon(res['predicted_class'])} {display_label(res['predicted_class'])}")
+        st.write(f"**Confidence:** {res['confidence']:.2f}%")
+        st.write(f"**Preliminary Score:** {res['total_score']} / {res['max_mark']}")
+        st.write("**Percentage:**", f"{res['percentage']:.2f}%")
 
-            pdf = create_pdf_report(result)
+        st.write("Generate and download the AI-assisted visual welding assessment report.")
 
-            st.download_button(
-                label="Download PDF Report",
-                data=pdf,
-                file_name="AI_Welgrade_Assessment_Report.pdf",
-                mime="application/pdf"
-            )
+        pdf = create_pdf_report(res)
+
+        st.download_button(
+            label="Download PDF Report",
+            data=pdf,
+            file_name="AI_Welgrade_Assessment_Report.pdf",
+            mime="application/pdf"
+        )
 
 # =========================
 # Result & Rubric Score
