@@ -1,5 +1,6 @@
 
 import streamlit as st
+from streamlit_option_menu import option_menu
 import streamlit.components.v1 as components
 import tensorflow as tf
 from PIL import Image, ImageDraw
@@ -411,19 +412,28 @@ with col2:
     st.image(str(logo_path), width="content")
     st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade by PBS</h1>', unsafe_allow_html=True)
 
-from streamlit_option_menu import option_menu
+if "menu_option" not in st.session_state:
+    st.session_state["menu_option"] = 0
+
+menu_options = [
+    "Home",
+    "About",
+    "Welding Assessment",
+    "Result & Rubric Score",
+    "Feedback",
+]
+
+manual_index = st.session_state.get("redirect_page", None)
+if "redirect_page" in st.session_state:
+    del st.session_state["redirect_page"]
 
 with st.sidebar:
     page = option_menu(
-        menu_title=None,  # Hide menu title
-        options=[
-            "Home",
-            "About",
-            "Welding Assessment",
-            "Result & Rubric Score",
-            "Feedback",
-        ],
-        default_index=0,
+        menu_title=None,
+        options=menu_options,
+        default_index=st.session_state["menu_option"],
+        key="navigation_menu",
+        manual_select=manual_index,
     )
 
 st.sidebar.markdown("---")
@@ -559,7 +569,10 @@ elif page == "Welding Assessment":
     if "assessment_result" in st.session_state and st.session_state["assessment_result"] is not None:
         res = st.session_state["assessment_result"]
 
-        st.success("AI analysis completed. Go to Result & Rubric Score page to view the full result.")
+        st.success("AI analysis completed.")
+        if st.button("Go to Result & Rubric Score page to view the full result."):
+            st.session_state["redirect_page"] = 3
+            st.rerun()
 
         st.subheader("Quick Result")
         st.write(f"**Predicted Class:** {display_icon(res['predicted_class'])} {display_label(res['predicted_class'])}")
@@ -575,7 +588,8 @@ elif page == "Welding Assessment":
             label="Download PDF Report",
             data=pdf,
             file_name="AI_Welgrade_Assessment_Report.pdf",
-            mime="application/pdf"
+            mime="application/pdf",
+            type="primary"
         )
 
 # =========================
