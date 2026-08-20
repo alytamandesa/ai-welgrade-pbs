@@ -468,7 +468,6 @@ render_header()
 # =========================
 
 if page == "Home":
-    st.markdown('<div class="white-card">', unsafe_allow_html=True)
     st.header("Welcome")
 
     st.write(
