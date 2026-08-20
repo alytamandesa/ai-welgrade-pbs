@@ -421,7 +421,6 @@ with st.sidebar:
             "About",
             "Welding Assessment",
             "Result & Rubric Score",
-            "PDF Report",
             "Feedback",
         ],
         default_index=0,
@@ -538,7 +537,18 @@ elif page == "Welding Assessment":
             st.write(f"**Predicted Class:** {display_icon(predicted_class)} {display_label(predicted_class)}")
             st.write(f"**Confidence:** {confidence:.2f}%")
             st.write(f"**Preliminary Score:** {total_score} / {max_mark}")
+            st.write("**Percentage:**", f"{percentage:.2f}%")
 
+            st.write("Generate and download the AI-assisted visual welding assessment report.")
+
+            pdf = create_pdf_report(result)
+
+            st.download_button(
+                label="Download PDF Report",
+                data=pdf,
+                file_name="AI_Welgrade_Assessment_Report.pdf",
+                mime="application/pdf"
+            )
 
 # =========================
 # Result & Rubric Score
@@ -570,7 +580,6 @@ elif page == "Result & Rubric Score":
             "bad_weld": "bad-card"
         }.get(predicted_class, "moderate-card")
 
-        st.markdown(f'<div class="{card_class}">', unsafe_allow_html=True)
         st.subheader("AI Classification Result")
         st.write(f"**Predicted Class:** {display_icon(predicted_class)} {display_label(predicted_class)}")
         st.write(f"**Confidence Score:** {result['confidence']:.2f}%")
@@ -585,11 +594,7 @@ elif page == "Result & Rubric Score":
             "Probability (%)": [round(v, 2) for v in result["probabilities"].values()]
         })
 
-        st.dataframe(prob_df, use_container_width=True)
-
-        for cls, prob in result["probabilities"].items():
-            st.write(f"{display_label(cls)}: {prob:.2f}%")
-            st.progress(min(max(prob / 100, 0), 1))
+        st.dataframe(prob_df, use_container_width=True, hide_index=True)
 
         st.subheader("AI-Assisted Preliminary Rubric Score")
 
@@ -598,7 +603,7 @@ elif page == "Result & Rubric Score":
             "Score": [f"{score} / 5" for score in result["scores"].values()]
         })
 
-        st.dataframe(rubric_df, use_container_width=True)
+        st.dataframe(rubric_df, use_container_width=True, hide_index=True)
 
         col_score1, col_score2 = st.columns(2)
 
@@ -619,35 +624,6 @@ elif page == "Result & Rubric Score":
             st.warning("Moderate confidence result. Instructor review is recommended.")
         else:
             st.success("Prediction confidence is relatively high. Instructor verification is still required for final marking.")
-
-
-# =========================
-# PDF Report
-# =========================
-
-elif page == "PDF Report":
-    st.header("PDF Report")
-
-    result = st.session_state.get("assessment_result")
-
-    if result is None:
-        st.warning("No assessment result available. Please run analysis first.")
-    else:
-        st.write("Generate and download the AI-assisted visual welding assessment report.")
-
-        st.write("**Predicted Class:**", display_label(result["predicted_class"]))
-        st.write("**Confidence:**", f"{result['confidence']:.2f}%")
-        st.write("**Score:**", f"{result['total_score']} / {result['max_mark']}")
-        st.write("**Percentage:**", f"{result['percentage']:.2f}%")
-
-        pdf = create_pdf_report(result)
-
-        st.download_button(
-            label="Download PDF Report",
-            data=pdf,
-            file_name="AI_Welgrade_Assessment_Report.pdf",
-            mime="application/pdf"
-        )
 
 # =========================
 # CQI Feedback
