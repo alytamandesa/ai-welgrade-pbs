@@ -389,57 +389,27 @@ def save_cqi(row):
     all_df.to_csv(FEEDBACK_CSV, index=False)
     return all_df
 
+# =========================
+# Navigation
+# =========================
 
-
-
-def render_header():
-    logo_candidates = [
+logo_candidates = [
         APP_DIR / "pbs_logo.png",
         APP_DIR / "logo_pbs.png",
         APP_DIR / "logo.png"
     ]
 
-    logo_path = None
-    for path in logo_candidates:
-        if path.exists():
-            logo_path = path
-            break
+logo_path = None
+for path in logo_candidates:
+    if path.exists():
+        logo_path = path
+        break
 
-    hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            .stDeployButton {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+col1, col2, col3 = st.sidebar.columns([1,10,1])
 
-    col_logo, col_title = st.columns([1, 6], vertical_alignment="center")
-
-    with col_logo:
-        if logo_path:
-            st.image(str(logo_path), width=120)
-        else:
-            st.markdown("### 🧠")
-
-    with col_title:
-        st.markdown('<div class="app-title">AI Welgrade by PBS</div>', unsafe_allow_html=True)
-        st.markdown(
-            '<div class="app-description">'
-            'An AI-based visual welding assessment tool designed to analyse uploaded or captured welding images '
-            'and provide visual quality classification, preliminary rubric scoring and feedback for teaching and learning support.'
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-
-# =========================
-# Navigation
-# =========================
-
-st.sidebar.title("Navigation")
+with col2:
+    st.image(str(logo_path), width="content")
+    st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade by PBS</h1>', unsafe_allow_html=True)
 
 from streamlit_option_menu import option_menu
 
@@ -459,9 +429,6 @@ with st.sidebar:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("AI Welgrade by PBS | Lite Mode")
-
-render_header()
-
 
 # =========================
 # Home
@@ -720,7 +687,6 @@ elif page == "Feedback":
 elif page == "About":
     st.header("About")
 
-    st.markdown('<div class="white-card">', unsafe_allow_html=True)
     st.subheader("About the Application")
     st.write(
         "AI Welgrade by PBS is a Lite Mode prototype for AI-assisted visual welding assessment. "
@@ -728,7 +694,6 @@ elif page == "About":
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown('<div class="limit-card">', unsafe_allow_html=True)
     st.subheader("Important Limitation")
     st.write(
         "This system performs external visual image classification only. "
