@@ -428,7 +428,7 @@ with st.sidebar:
     )
 
 st.sidebar.markdown("---")
-st.sidebar.caption("AI Welgrade by PBS | Lite Mode")
+st.sidebar.caption("AI Welgrade by PBS | AI-assisted preliminary welding assessment for teaching and learning support", text_alignment="justify")
 
 # =========================
 # Home
@@ -692,7 +692,6 @@ elif page == "About":
         "AI Welgrade by PBS is a Lite Mode prototype for AI-assisted visual welding assessment. "
         "It analyses welding images and provides visual classification, preliminary rubric scoring and feedback."
     )
-    st.markdown("</div>", unsafe_allow_html=True)
 
     st.subheader("Important Limitation")
     st.write(
@@ -706,15 +705,8 @@ elif page == "About":
     st.write(
         "The After Analysis image uses a status overlay only. It does not indicate confirmed defect locations."
     )
-    st.markdown("</div>", unsafe_allow_html=True)
 
     st.subheader("Model Information")
     st.write("Model type: MobileNetV2 transfer learning")
     st.write("Classification classes:", ", ".join([display_label(cls) for cls in class_names]))
     st.write("Mode: Lite Mode visual classification")
-
-
-st.markdown(
-    '<div class="footer-note">AI Welgrade by PBS | AI-assisted preliminary welding assessment for teaching and learning support</div>',
-    unsafe_allow_html=True
-)
