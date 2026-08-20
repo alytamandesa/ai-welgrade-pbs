@@ -409,7 +409,19 @@ manual_index = st.session_state.get("redirect_page", None)
 if "redirect_page" in st.session_state:
     del st.session_state["redirect_page"]
 
+st.markdown(
+    """
+    <style>
+    section[data-testid="stSidebar"] div {
+        overflow: hidden !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 with st.sidebar:
+    st.space()
     page = option_menu(
         menu_title=None,
         options=menu_options,
