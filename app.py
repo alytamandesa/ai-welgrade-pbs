@@ -649,36 +649,50 @@ elif page == "PDF Report":
             mime="application/pdf"
         )
 
-
 # =========================
 # CQI Feedback
 # =========================
 
-
-
 elif page == "Feedback":
     st.header("Feedback")
-
     st.write(
-        "Please complete the evaluation form below. "
-        "Your feedback will be used for Continuous Quality Improvement (CQI) of AI Welgrade by PBS."
-    )
-
+                "Please complete the evaluation form below. "
+                "Your feedback will be used for Continuous Quality Improvement (CQI) of AI Welgrade by PBS."
+            )
     st.info(
-        "If the embedded form does not load properly, please open the feedback form in a new tab."
-    )
-
+                    "Having trouble loading the embedded form?",
+                    icon="ℹ️"
+                )
     st.link_button(
-        "Open CQI Feedback Form in New Tab",
-        "https://docs.google.com/forms/d/e/1FAIpQLSeCRriu80Pyo4lReS4_EvjOwczZJBIgp83hBwS7hMqpddbN5A/viewform?usp=header"
+                    "Open in New Tab ↗",
+                    "https://docs.google.com/forms/d/e/1FAIpQLSeCRriu80Pyo4lReS4_EvjOwczZJBIgp83hBwS7hMqpddbN5A/viewform?usp=header",
+                    use_container_width=True
+                )
+    st.markdown(
+        """
+        <style>
+        iframe[data-testid="stIFrame"] {
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+
+        /* Invert colors automatically when system/browser is in Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            iframe[data-testid="stIFrame"] {
+                filter: invert(0.92) hue-rotate(180deg);
+                border-color: #444;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
     )
 
     components.iframe(
         "https://docs.google.com/forms/d/e/1FAIpQLSeCRriu80Pyo4lReS4_EvjOwczZJBIgp83hBwS7hMqpddbN5A/viewform?embedded=true",
-        height=1200,
-        scrolling=True
+        height=900,
+        scrolling=True,
     )
-
 
 # =========================
 # About
