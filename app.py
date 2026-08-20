@@ -22,7 +22,7 @@ from reportlab.lib import colors
 # =========================
 
 st.set_page_config(
-    page_title="AI Welgrade by PBS",
+    page_title="AI Welgrade",
     page_icon="🧠",
     layout="wide"
 )
@@ -277,8 +277,8 @@ def create_pdf_report(result):
     )
 
     story = []
-    story.append(Paragraph("AI Welgrade by PBS", title_style))
-    story.append(Paragraph("AI-Assisted Visual Welding Assessment Report", styles["Heading2"]))
+    story.append(Paragraph("AI Welgrade", title_style))
+    story.append(Paragraph("AI-Based Visual Welding Assessment and Rubric Scoring System", styles["Heading2"]))
     story.append(Spacer(1, 10))
 
     info_table = Table([
@@ -392,7 +392,8 @@ col1, col2, col3 = st.sidebar.columns([1,10,1])
 
 with col2:
     st.image(str(logo_path), width="content")
-    st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade by PBS</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade</h1>', unsafe_allow_html=True)
+    st.markdown('<h5 style="text-align: center; font-weight: bold;">AI-Based Visual Welding Assessment and Rubric Scoring System</h5>', unsafe_allow_html=True)
 
 if "menu_option" not in st.session_state:
     st.session_state["menu_option"] = 0
@@ -430,8 +431,7 @@ with st.sidebar:
         manual_select=manual_index,
     )
 
-st.sidebar.markdown("---")
-st.sidebar.caption("AI Welgrade by PBS | AI-assisted preliminary welding assessment for teaching and learning support", text_alignment="justify")
+st.sidebar.caption("AI Welgrade | AI-Based Visual Welding Assessment and Rubric Scoring System", text_alignment="justify")
 
 # =========================
 # Home
@@ -455,11 +455,13 @@ if page == "Home":
 
     with col2:
         st.image(str(logo_path), width="content")
-        st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade by PBS</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade</h1>', unsafe_allow_html=True)
+        st.markdown('<h5 style="text-align: center; font-weight: bold;">AI-Based Visual Welding Assessment and Rubric Scoring System</h5>', unsafe_allow_html=True)
+
     st.header("Welcome")
 
     st.write(
-        "AI Welgrade by PBS is a web-based AI-assisted welding assessment application. "
+        "AI Welgrade is a web-based AI-assisted welding assessment application. "
         "It analyses welding images and provides visual quality classification, preliminary rubric scoring and feedback."
     )
 
@@ -720,7 +722,7 @@ elif page == "About":
 
     st.subheader("About the Application")
     st.write(
-        "AI Welgrade by PBS is a Lite Mode prototype for AI-assisted visual welding assessment. "
+        "AI Welgrade is a Lite Mode prototype for AI-assisted visual welding assessment. "
         "It analyses welding images and provides visual classification, preliminary rubric scoring and feedback."
     )
 
