@@ -448,11 +448,11 @@ with st.sidebar:
         menu_title=None,  # Hide menu title
         options=[
             "Home",
+            "About",
             "Welding Assessment",
             "Result & Rubric Score",
             "PDF Report",
-            "User Evaluation / CQI Feedback",
-            "About & Limitation"
+            "Feedback",
         ],
         default_index=0,
     )
@@ -689,8 +689,8 @@ elif page == "PDF Report":
 
 
 
-elif page == "User Evaluation / CQI Feedback":
-    st.header("User Evaluation / CQI Feedback")
+elif page == "Feedback":
+    st.header("Feedback")
 
     st.write(
         "Please complete the evaluation form below. "
@@ -717,8 +717,8 @@ elif page == "User Evaluation / CQI Feedback":
 # About
 # =========================
 
-elif page == "About & Limitation":
-    st.header("About & Limitation")
+elif page == "About":
+    st.header("About")
 
     st.markdown('<div class="white-card">', unsafe_allow_html=True)
     st.subheader("About the Application")
