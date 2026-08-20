@@ -426,6 +426,24 @@ st.sidebar.caption("AI Welgrade by PBS | AI-assisted preliminary welding assessm
 # =========================
 
 if page == "Home":
+    logo_candidates = [
+        APP_DIR / "pbs_logo.png",
+        APP_DIR / "logo_pbs.png",
+        APP_DIR / "logo.png"
+    ]
+
+    logo_path = None
+    for path in logo_candidates:
+        if path.exists():
+            logo_path = path
+            break
+
+    st.space()
+    col1, col2, col3 = st.columns([1,1,1])
+
+    with col2:
+        st.image(str(logo_path), width="content")
+        st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade by PBS</h1>', unsafe_allow_html=True)
     st.header("Welcome")
 
     st.write(
