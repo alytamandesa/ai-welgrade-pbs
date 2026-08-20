@@ -602,11 +602,6 @@ elif page == "Result & Rubric Score":
             st.caption("Lite Mode visual overlay only. This does not mark confirmed defect locations.")
 
         predicted_class = result["predicted_class"]
-        card_class = {
-            "good_weld": "good-card",
-            "moderate_weld": "moderate-card",
-            "bad_weld": "bad-card"
-        }.get(predicted_class, "moderate-card")
 
         st.subheader("AI Classification Result")
         st.write(f"**Predicted Class:** {display_icon(predicted_class)} {display_label(predicted_class)}")
