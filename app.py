@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import streamlit.components.v1 as components
 import tensorflow as tf
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 import json
 import pandas as pd
@@ -402,7 +402,6 @@ menu_options = [
     "Home",
     "About",
     "Welding Assessment",
-    "Result & Rubric Score",
     "Feedback",
 ]
 
@@ -579,22 +578,72 @@ elif page == "Welding Assessment":
             st.rerun()
 
     if "assessment_result" in st.session_state and st.session_state["assessment_result"] is not None:
-        res = st.session_state["assessment_result"]
 
-        st.success("AI analysis completed.")
-        if st.button("Go to Result & Rubric Score page to view the full result."):
-            st.session_state["redirect_page"] = 3
-            st.rerun()
+        st.header("Result & Rubric Score")
 
-        st.subheader("Quick Result")
-        st.write(f"**Predicted Class:** {display_icon(res['predicted_class'])} {display_label(res['predicted_class'])}")
-        st.write(f"**Confidence:** {res['confidence']:.2f}%")
-        st.write(f"**Preliminary Score:** {res['total_score']} / {res['max_mark']}")
-        st.write("**Percentage:**", f"{res['percentage']:.2f}%")
+        result = st.session_state["assessment_result"]
+
+        if result is None:
+            st.warning("No assessment result available. Please run analysis on the Welding Assessment page first.")
+        else:
+            st.subheader("Weld Image")
+            cols = st.columns([2,1])
+            with cols[0]:
+                st.image(result["image"], use_container_width=True)
+
+            predicted_class = result["predicted_class"]
+
+            st.subheader("AI Classification Result")
+            st.write(f"**Predicted Class:** {display_icon(predicted_class)} {display_label(predicted_class)}")
+            st.write(f"**Preliminary Score:** {result['total_score']} / {result['max_mark']}")
+            st.write("**Percentage:**", f"{result['percentage']:.2f}%")
+            st.write(f"**Confidence Score:** {result['confidence']:.2f}%")
+            st.write(f"**Confidence Status:** {result['confidence_status']}")
+            st.write(result["confidence_message"])
+            st.markdown("</div>", unsafe_allow_html=True)
+
+            st.subheader("Class Probability")
+
+            prob_df = pd.DataFrame({
+                "Class": [display_label(cls) for cls in result["probabilities"].keys()],
+                "Probability (%)": [round(v, 2) for v in result["probabilities"].values()]
+            })
+
+            st.dataframe(prob_df, use_container_width=True, hide_index=True)
+
+            st.subheader("AI-Assisted Preliminary Rubric Score")
+
+            rubric_df = pd.DataFrame({
+                "Criteria": list(result["scores"].keys()),
+                "Score": [f"{score} / 5" for score in result["scores"].values()]
+            })
+
+            st.dataframe(rubric_df, use_container_width=True, hide_index=True)
+
+            col_score1, col_score2 = st.columns(2)
+
+            with col_score1:
+                st.metric("Total Score", f"{result['total_score']} / {result['max_mark']}")
+
+            with col_score2:
+                st.metric("Percentage", f"{result['percentage']:.2f}%")
+
+            st.subheader("Feedback")
+            st.write(result["feedback"]["summary"])
+            st.write(result["feedback"]["feedback"])
+            st.info("Recommended Improvement: " + result["feedback"]["improvement"])
+
+            if result["confidence"] < 60:
+                st.error("Low confidence result. Instructor review is strongly required.")
+            elif result["confidence"] < 80:
+                st.warning("Moderate confidence result. Instructor review is recommended.")
+            else:
+                st.success("Prediction confidence is relatively high. Instructor verification is still required for final marking.")
+
 
         st.write("Generate and download the AI-assisted visual welding assessment report.")
 
-        pdf = create_pdf_report(res)
+        pdf = create_pdf_report(result)
 
         st.download_button(
             label="Download PDF Report",
@@ -603,70 +652,6 @@ elif page == "Welding Assessment":
             mime="application/pdf",
             type="primary"
         )
-
-# =========================
-# Result & Rubric Score
-# =========================
-
-elif page == "Result & Rubric Score":
-    st.header("Result & Rubric Score")
-
-    result = st.session_state.get("assessment_result")
-
-    if result is None:
-        st.warning("No assessment result available. Please run analysis on the Welding Assessment page first.")
-    else:
-        st.subheader("Weld Image")
-        cols = st.columns([2,1])
-        with cols[0]:
-            st.image(result["image"], use_container_width=True)
-
-        predicted_class = result["predicted_class"]
-
-        st.subheader("AI Classification Result")
-        st.write(f"**Predicted Class:** {display_icon(predicted_class)} {display_label(predicted_class)}")
-        st.write(f"**Confidence Score:** {result['confidence']:.2f}%")
-        st.write(f"**Confidence Status:** {result['confidence_status']}")
-        st.write(result["confidence_message"])
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.subheader("Class Probability")
-
-        prob_df = pd.DataFrame({
-            "Class": [display_label(cls) for cls in result["probabilities"].keys()],
-            "Probability (%)": [round(v, 2) for v in result["probabilities"].values()]
-        })
-
-        st.dataframe(prob_df, use_container_width=True, hide_index=True)
-
-        st.subheader("AI-Assisted Preliminary Rubric Score")
-
-        rubric_df = pd.DataFrame({
-            "Criteria": list(result["scores"].keys()),
-            "Score": [f"{score} / 5" for score in result["scores"].values()]
-        })
-
-        st.dataframe(rubric_df, use_container_width=True, hide_index=True)
-
-        col_score1, col_score2 = st.columns(2)
-
-        with col_score1:
-            st.metric("Total Score", f"{result['total_score']} / {result['max_mark']}")
-
-        with col_score2:
-            st.metric("Percentage", f"{result['percentage']:.2f}%")
-
-        st.subheader("Feedback")
-        st.write(result["feedback"]["summary"])
-        st.write(result["feedback"]["feedback"])
-        st.info("Recommended Improvement: " + result["feedback"]["improvement"])
-
-        if result["confidence"] < 60:
-            st.error("Low confidence result. Instructor review is strongly required.")
-        elif result["confidence"] < 80:
-            st.warning("Moderate confidence result. Instructor review is recommended.")
-        else:
-            st.success("Prediction confidence is relatively high. Instructor verification is still required for final marking.")
 
 # =========================
 # CQI Feedback
