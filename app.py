@@ -22,7 +22,7 @@ from reportlab.lib import colors
 # =========================
 
 st.set_page_config(
-    page_title="AI Welgrade",
+    page_title="AI-Welgrade",
     page_icon="🧠",
     layout="wide"
 )
@@ -277,7 +277,7 @@ def create_pdf_report(result):
     )
 
     story = []
-    story.append(Paragraph("AI Welgrade", title_style))
+    story.append(Paragraph("AI-Welgrade", title_style))
     story.append(Paragraph("AI-Based Visual Welding Assessment and Rubric Scoring System", styles["Heading2"]))
     story.append(Spacer(1, 10))
 
@@ -392,7 +392,7 @@ col1, col2, col3 = st.sidebar.columns([1,10,1])
 
 with col2:
     st.image(str(logo_path), width="content")
-    st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="text-align: center; font-weight: bold;">AI-Welgrade</h1>', unsafe_allow_html=True)
     st.markdown('<h5 style="text-align: center; font-weight: bold;">AI-Based Visual Welding Assessment and Rubric Scoring System</h5>', unsafe_allow_html=True)
 
 if "menu_option" not in st.session_state:
@@ -430,7 +430,7 @@ with st.sidebar:
         manual_select=manual_index,
     )
 
-st.sidebar.caption("AI Welgrade | AI-Based Visual Welding Assessment and Rubric Scoring System", text_alignment="justify")
+st.sidebar.caption("AI-Welgrade | AI-Based Visual Welding Assessment and Rubric Scoring System", text_alignment="justify")
 
 # =========================
 # Home
@@ -454,13 +454,13 @@ if page == "Home":
 
     with col2:
         st.image(str(logo_path), width="content")
-        st.markdown('<h1 style="text-align: center; font-weight: bold;">AI Welgrade</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 style="text-align: center; font-weight: bold;">AI-Welgrade</h1>', unsafe_allow_html=True)
         st.markdown('<h5 style="text-align: center; font-weight: bold;">AI-Based Visual Welding Assessment and Rubric Scoring System</h5>', unsafe_allow_html=True)
 
     st.header("Welcome")
 
     st.write(
-        "AI Welgrade is a web-based AI-assisted welding assessment application. "
+        "AI-Welgrade is a web-based AI-assisted welding assessment application. "
         "It analyses welding images and provides visual quality classification, preliminary rubric scoring and feedback."
     )
 
@@ -661,7 +661,7 @@ elif page == "Feedback":
     st.header("Feedback")
     st.write(
                 "Please complete the evaluation form below. "
-                "Your feedback will be used for Continuous Quality Improvement (CQI) of AI Welgrade by PBS."
+                "Your feedback will be used for Continuous Quality Improvement (CQI) of AI-Welgrade by PBS."
             )
     st.info(
                     "Having trouble loading the embedded form?",
@@ -707,7 +707,7 @@ elif page == "About":
 
     st.subheader("About the Application")
     st.write(
-        "AI Welgrade is a Lite Mode prototype for AI-assisted visual welding assessment. "
+        "AI-Welgrade is a Lite Mode prototype for AI-assisted visual welding assessment. "
         "It analyses welding images and provides visual classification, preliminary rubric scoring and feedback."
     )
 
